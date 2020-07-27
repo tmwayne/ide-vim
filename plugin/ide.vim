@@ -73,7 +73,7 @@ function! SendKeys(type)
 endfunction
 
 function! s:CheckForREPL(msg)
-  if bufwinnr(t:termbufnr) == -1
+  if !exists('t:termbufnr') || bufwinnr(t:termbufnr) == -1
     throw a:msg
   endif
 endfunction
