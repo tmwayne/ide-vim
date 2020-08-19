@@ -7,7 +7,11 @@
 
 " VARIABLES {{{
 
-let t:repl = system("which python")
+let t:repl = system("which ipython 2> /dev/null")
+
+if len(t:repl) == 0
+  let t:repl = system("which python 2> /dev/null")
+endif
 
 " }}}
 
