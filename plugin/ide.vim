@@ -9,11 +9,17 @@
 
 command! -nargs=1 StartREPL call StartREPL(<args>)
 
+tnoremap <silent> <c-t> <c-w>::call StartEditor()<cr>
+
 nnoremap <silent> <localleader>t :call StartREPL(t:repl)<cr>
 nnoremap <silent> <localleader>r :call SendKeys("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call SendKeys(visualmode())<cr>
 
 nnoremap <silent> <localleader>q :call QuitREPL()<cr>
+
+" Remove mapping for bnext
+unmap [b
+unmap ]b
 
 " }}}
 
@@ -42,6 +48,15 @@ function! StartREPL(repl)
   execute command
   let t:termbufnr=winbufnr(0)
   execute "normal! "
+
+  " Set filetype for tab in case we accidently close the editor
+  let t:filetype=&ft
+endfunction!
+
+function! StartEditor()
+  " " Start a window to hold the script to be edited
+  vnew 
+  let &ft=t:filetype
 endfunction!
 
 function! QuitREPL()
