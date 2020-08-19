@@ -30,6 +30,10 @@ function! FindREPL(repl)
   return repl
 endfunction
 
+function! SplitVertical()
+  return (2.5 * &lines) < &columns
+endfunction!
+
 function! StartREPL(repl)
   " Start a terminal using the specified repo
   " Set the buffer number of the terminal as a global variable
@@ -37,7 +41,7 @@ function! StartREPL(repl)
   let repl = FindREPL(a:repl)
   let command = "term " . repl
 
-  if (2.5 * &lines) < &columns
+  if SplitVertical()
     let command = "vert " . command
   endif
 
@@ -51,10 +55,16 @@ function! StartREPL(repl)
 endfunction!
 
 function! StartEditor()
-  " " Start a window to hold the script to be edited
-  set splitright!
-  vnew 
-  set splitright!
+  " Start a window to hold the script to be edited
+  if SplitVertical()
+    set splitright!
+    vnew 
+    set splitright!
+  else
+    set splitbelow!
+    new
+    set splitbelow!
+  endif
   let &ft=t:filetype
 endfunction!
 
