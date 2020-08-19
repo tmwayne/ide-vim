@@ -47,8 +47,8 @@ function! StartREPL(repl)
 
   execute command
   let t:termbufnr=winbufnr(0)
-  execute "normal! "
   set nobuflisted
+  execute "normal! "
 
   " Set filetype for tab in case we accidently close the editor
   let t:filetype=&ft
