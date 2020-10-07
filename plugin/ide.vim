@@ -87,9 +87,9 @@ function! SendKeys(type)
     normal yip
   endif
 
-  if a:type !=# 'V'
-    let @@ = @@ . "\n"
-  endif
+  " if a:type !=# 'V'
+    " let @@ = @@ . "\n"
+  " endif
 
   call term_sendkeys(t:termbufnr, @@)
 
