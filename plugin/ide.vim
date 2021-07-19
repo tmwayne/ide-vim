@@ -24,7 +24,8 @@ nnoremap <silent> <localleader>q :call QuitREPL()<cr>
 
 function! FindREPL(repl)
   " Find the full pathname to the supplied REPL
-  let repl = system("which " . a:repl)
+  let repl = substitute(system("which " . a:repl), "\n", "", "g")
+
   if repl == ""
     throw "No path found for REPL " . a:repl . "..."
   endif
