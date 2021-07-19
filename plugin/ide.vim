@@ -8,6 +8,7 @@
 " MAPPINGS {{{
 
 command! -nargs=1 StartREPL call StartREPL(<args>)
+command! -nargs=1 StartCmdREPL call StartCmdREPL(<args>)
 
 tnoremap <silent> <c-t> <c-w>::call StartEditor()<cr>
 
@@ -55,11 +56,49 @@ function! StartREPL(repl)
   let t:filetype=&ft
 endfunction!
 
+function! StartDockerREPL(image)
+  " Start a terminal using the specified repo
+  " Set the buffer number of the terminal as a global variable
+  " to reference when using term_sendkeys()
+  let command = "term docker-compose run --rm " . a:image
+
+  if SplitVertical()
+    let command = "vert " . command
+  endif
+
+  execute command
+  let t:termbufnr=winbufnr(0)
+  set nobuflisted
+  execute "normal! "
+
+  " Set filetype for tab in case we accidently close the editor
+  let t:filetype=&ft
+endfunction!
+
+function! StartCmdREPL(cmd)
+  " Start a terminal using the specified repo
+  " Set the buffer number of the terminal as a global variable
+  " to reference when using term_sendkeys()
+  let command = "term " . a:cmd
+
+  if SplitVertical()
+    let command = "vert " . command
+  endif
+
+  execute command
+  let t:termbufnr=winbufnr(0)
+  set nobuflisted
+  execute "normal! "
+
+  " Set filetype for tab in case we accidently close the editor
+  let t:filetype=&ft
+endfunction!
+
 function! StartEditor()
   " Start a window to hold the script to be edited
   if SplitVertical()
     set splitright!
-    vnew 
+    vnew
     set splitright!
   else
     set splitbelow!
@@ -92,7 +131,9 @@ function! SendKeys(type)
     " let @@ = @@ . "\n"
   " endif
 
+  " call term_sendkeys(t:termbufnr, "%cpaste -q \n")
   call term_sendkeys(t:termbufnr, @@)
+  " call term_sendkeys(t:termbufnr, "\n--\n")
 
   let @@ = saved_reg
 endfunction
