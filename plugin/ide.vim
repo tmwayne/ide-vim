@@ -59,12 +59,20 @@ function! StartEditor()
   let &ft=t:filetype
 endfunction!
 
+function! s:existsREPL()
+  " Check if the terminal buffer exists and if the a buffer number is set
+  return exists('t:termbufnr') && bufwinnr(t:termbufnr) != -1
+endfunction
+
 function! SendKeys(type)
   " Send a command to the terminal
   " If the select is visual, send that.
   " Otherwise, yank the paragraph and send that
   " Use the "@ register and restore it afterwards
-  call s:CheckForREPL("No REPL to send commands to...")
+  if !s:existsREPL()
+    return
+  endif
+
   let saved_reg = @@
 
   if a:type ==? 'V'
@@ -78,14 +86,11 @@ function! SendKeys(type)
   let @@ = saved_reg
 endfunction
 
-function! s:CheckForREPL(msg)
-  if !exists('t:termbufnr') || bufwinnr(t:termbufnr) == -1
-    throw a:msg
-  endif
-endfunction
-
 function! QuitREPL()
-  call s:CheckForREPL("REPL isn't open...")
+  if !s:existsREPL()
+    return
+  endif
+
   execute "bd! " . t:termbufnr
 endfunction!
 
