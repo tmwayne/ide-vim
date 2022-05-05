@@ -3,7 +3,19 @@
 " ide.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
-" Tyler Wayne @ 2022
+" Copyright (c) 2022 Tyler Wayne
+" 
+" Licensed under the Apache License, Version 2.0 (the "License");
+" you may not use this file except in compliance with the License.
+" You may obtain a copy of the License at
+" 
+"     http://www.apache.org/licenses/LICENSE-2.0
+" 
+" Unless required by applicable law or agreed to in writing, software
+" distributed under the License is distributed on an "AS IS" BASIS,
+" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+" See the License for the specific language governing permissions and
+" limitations under the License.
 "
 
 " MAPPINGS {{{
@@ -16,7 +28,7 @@ tnoremap <silent> <c-t> <c-w>::call StartEditor()<cr>
 nnoremap <silent> <localleader>r :call SendKeys("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call SendKeys(visualmode())<cr>
 
-nnoremap <silent> <localleader>q :call QuitREPL()<cr>
+nnoremap <silent> <localleader>q :call CloseREPL()<cr>
 
 " }}}
 
@@ -59,7 +71,7 @@ function! StartEditor()
   let &ft=t:filetype
 endfunction!
 
-function! s:existsREPL()
+function! s:ExistsREPL()
   " Check if the terminal buffer exists and if the a buffer number is set
   return exists('t:termbufnr') && bufwinnr(t:termbufnr) != -1
 endfunction
@@ -69,7 +81,7 @@ function! SendKeys(type)
   " If the select is visual, send that.
   " Otherwise, yank the paragraph and send that
   " Use the "@ register and restore it afterwards
-  if !s:existsREPL()
+  if !s:ExistsREPL()
     return
   endif
 
@@ -86,8 +98,8 @@ function! SendKeys(type)
   let @@ = saved_reg
 endfunction
 
-function! QuitREPL()
-  if !s:existsREPL()
+function! CloseREPL()
+  if !s:ExistsREPL()
     return
   endif
 
