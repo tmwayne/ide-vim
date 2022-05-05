@@ -10,9 +10,8 @@ sending keys to the REPL, and closing the REPL.
 ## Installation
 Using Vim 8's native package loader, on Linux.
 ```
-mkdir -p ~/.vim/pack/my-plugins/start
-cd ~/.vim/pack/my-plugins/start
-git clone -depth=1 git@github.com:tmwayne/ide-vim
+mkdir -p ~/.vim/pack/my-plugins/start && cd $_
+git clone --depth=1 git@github.com:tmwayne/ide-vim
 ```
 
 ## Usage
@@ -28,7 +27,10 @@ be in the editor window.
 - Vim v8.1+
 
 ## Issues
-Some REPLs, such as IPython require autoindentation to be turned off for
-`ide-vim` to work correctly. Also, with IPython, sending functions that
+- Some REPLs, such as IPython require autoindentation to be turned off for
+`ide-vim` to work correctly. 
+- Also, with IPython, sending functions that
 contain new lines doesn't currently work. To current workaround is to replace
 the newlines with a comment character.
+- Closing file in the current editor buffer with `:bd` will close the buffer
+altogether. If the REPL hasn't been closed, then this will strand it.
