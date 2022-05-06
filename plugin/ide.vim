@@ -25,7 +25,7 @@ command! -nargs=1 StartREPL call StartREPL(<args>)
 nnoremap <silent> <localleader>r :call RunCode("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
 
-" Restore the editor buffer when it's accidentally been closed
+" Restore the editor buffer when it's been accidentally closed
 tnoremap <silent> <c-t> <c-w>: :call RestoreEditor()<cr>
 
 " Press \q in the editor buffer to close the REPL
@@ -39,6 +39,11 @@ tnoremap <silent> <c-q> <c-w>: :call QuitREPL()<cr>
 " FUNCTIONS {{{
 
 function! SplitVertical()
+  " Check the terminal dimensions.
+  " When Vim is in full screen, the REPL buffer will be opened
+  " to the left or right, whichever is default.
+  " On the otherhand, when Vim is in half screen, 
+  " the REPL buffer will be either above or below.
   return (2.5 * &lines) < &columns
 endfunction!
 
@@ -52,8 +57,12 @@ function! StartREPL(cmd)
     let command = "vert " . command
   endif
 
+  " TODO: check that the command was successful
   execute command
   let t:termbufnr=winbufnr(0)
+  " Remove the REPL buffer from the buffer list. This prevents
+  " accidently opened a duplicate of the REPL buffer in the
+  " editor buffer.
   set nobuflisted
   execute "normal! "
 
