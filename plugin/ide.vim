@@ -1,7 +1,7 @@
 "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ------------------------------------------------------------------------------
 " ide.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ------------------------------------------------------------------------------
 "
 " Copyright (c) 2022 Tyler Wayne
 " 
@@ -62,7 +62,10 @@ function! StartREPL(cmd)
 endfunction!
 
 function! RestoreEditor()
-  " Restores the editor buffer when it's been accidentally closed
+  " Restores the editor buffer when it's been accidentally closed.
+  " The calls to split<side> around new ensure that the editor
+  " buffer is opened on the opposite side that the REPL buffer was
+  " opened on. This restores the position of the two buffers.
   if SplitVertical()
     set splitright!
     vnew
@@ -107,15 +110,5 @@ function! QuitREPL()
     execute "bd! " . t:termbufnr
   endif
 endfunction!
-
-" function! FindREPL(repl)
-"   " Find the full pathname to the supplied REPL
-"   let repl = substitute(system("which " . a:repl), "\n", "", "g")
-" 
-"   if repl == ""
-"     throw "No path found for REPL " . a:repl . "..."
-"   endif
-"   return repl
-" endfunction
 
 " }}}
