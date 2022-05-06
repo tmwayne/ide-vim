@@ -22,12 +22,17 @@
 
 command! -nargs=1 StartREPL call StartREPL(<args>)
 
-tnoremap <silent> <c-t> <c-w>::call StartEditor()<cr>
-
 nnoremap <silent> <localleader>r :call RunCode("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
 
+" Restore the editor buffer when it's accidentally been closed
+tnoremap <silent> <c-t> <c-w>: :call RestoreEditor()<cr>
+
+" Press \q in the editor buffer to close the REPL
 nnoremap <silent> <localleader>q :call QuitREPL()<cr>
+
+" Press <Ctrl-q> in the REPL buffer to close the REPL
+tnoremap <silent> <c-q> <c-w>: :call QuitREPL()<cr>
 
 " }}}
 
@@ -38,7 +43,7 @@ function! SplitVertical()
 endfunction!
 
 function! StartREPL(cmd)
-  " Start a terminal using the specified repo
+  " Start a terminal by running the provided command.
   " Set the buffer number of the terminal as a global variable
   " to reference when using term_sendkeys()
   let command = "term " . a:cmd
@@ -56,8 +61,8 @@ function! StartREPL(cmd)
   let t:filetype=&ft
 endfunction!
 
-function! StartEditor()
-  " Start a window to hold the script to be edited
+function! RestoreEditor()
+  " Restores the editor buffer when it's been accidentally closed
   if SplitVertical()
     set splitright!
     vnew

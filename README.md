@@ -17,13 +17,19 @@ git clone --depth=1 git@github.com:tmwayne/ide-vim
 ```
 
 ## Usage
-To start a REPL, enter `:StartREPL "ipython"`.
+To start a REPL, enter `:StartREPL "<repl>"`. Note that `<repl>`
+can be any valid bash command that opens a REPL, including 
+for example Docker interactive shells.
 
-To run lines in the REPL, highlight the code and enter `\r`. 
-If you don't highlight the text, the paragraph will be run.
+Use visual mode to highlight code you want to run and press `\r`.
+If no code is highlighted, then the paragraph will be run.
 
-To quit the REPL and close its buffer, enter `\q`. 
+To quit and close the REPL buffer, press `\q`. 
 Note that this requires being in the editor buffer.
+
+Sometimes the editor buffer is accidentally closed which leaves
+the REPL buffer stranded. Pressing `<Ctrl-T>` will restore
+the editor buffer.
 
 ## Requirements
 - Vim v8.1+
@@ -34,5 +40,3 @@ Note that this requires being in the editor buffer.
 - Also, with IPython, sending functions that
 contain new lines doesn't currently work. To current workaround is to replace
 the newlines with a comment character.
-- Closing file in the current editor buffer with `:bd` will close the buffer
-altogether. If the REPL hasn't been closed, then this will strand it.
