@@ -25,14 +25,20 @@ command! -nargs=1 StartREPL call StartREPL(<args>)
 nnoremap <silent> <localleader>r :call RunCode("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
 
-" Restore the editor buffer when it's been accidentally closed
+" Restore the editor window when it's been accidentally closed
 tnoremap <silent> <c-t> <c-w>: :call RestoreEditor()<cr>
 
-" Press \q in the editor buffer to close the REPL
+" Press \q in the editor window to close the REPL
 nnoremap <silent> <localleader>q :call QuitREPL()<cr>
 
-" Press <Ctrl-q> in the REPL buffer to close the REPL
+" Press <Ctrl-q> in the REPL window to close the REPL
 tnoremap <silent> <c-q> <c-w>: :call QuitREPL()<cr>
+
+" Close REPL window when quitting from the editor window.
+augroup close_repl_on_exit
+  autocmd!
+  autocmd QuitPre * :call QuitREPL()
+augroup END
 
 " }}}
 
@@ -40,10 +46,10 @@ tnoremap <silent> <c-q> <c-w>: :call QuitREPL()<cr>
 
 function! SplitVertical()
   " Check the terminal dimensions.
-  " When Vim is in full screen, the REPL buffer will be opened
+  " When Vim is in full screen, the REPL window will be opened
   " to the left or right, whichever is default.
   " On the otherhand, when Vim is in half screen, 
-  " the REPL buffer will be either above or below.
+  " the REPL window will be either above or below.
   return (2.5 * &lines) < &columns
 endfunction!
 
@@ -57,13 +63,14 @@ function! StartREPL(cmd)
     let command = "vert " . command
   endif
 
-  " TODO: check that the command was successful
   execute command
   let t:termbufnr=winbufnr(0)
   " Remove the REPL buffer from the buffer list. This prevents
   " accidently opened a duplicate of the REPL buffer in the
-  " editor buffer.
+  " editor window.
   set nobuflisted
+
+  " Return cursor to editor window
   execute "normal! "
 
   " Set filetype for tab in case we accidently close the editor
@@ -71,10 +78,10 @@ function! StartREPL(cmd)
 endfunction!
 
 function! RestoreEditor()
-  " Restores the editor buffer when it's been accidentally closed.
+  " Restores the editor window when it's been accidentally closed.
   " The calls to split<side> around new ensure that the editor
-  " buffer is opened on the opposite side that the REPL buffer was
-  " opened on. This restores the position of the two buffers.
+  " window is opened on the opposite side that the REPL window was
+  " opened on. This restores the position of the two window.
   if SplitVertical()
     set splitright!
     vnew
