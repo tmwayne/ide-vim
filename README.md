@@ -1,11 +1,13 @@
 # ide-vim
 
 ## About
-`ide-vim` is a IDE for use with VIM. The package is a small
+`ide-vim` is a IDE for use with VIM. The package is a thin
 wrapper around the asynchronous terminal feature released in Vim v8.1.
 
 The package handles opening a REPL, managing the buffers,
-sending keys to the REPL, and closing the REPL.
+sending keys to the REPL, and closing the REPL. It's meant to be as
+thin as possible while providing essential functionality, rather than
+being feature rich.
 
 ## Installation
 Using Vim 8's native package loader, on Linux.
@@ -17,11 +19,11 @@ git clone --depth=1 git@github.com:tmwayne/ide-vim
 ## Usage
 To start a REPL, enter `:StartREPL "ipython"`.
 
-To send a lines to the REPL, highlight and enter `\r`. If you don't highlight
-the text, the paragraph will be sent.
+To run lines in the REPL, highlight the code and enter `\r`. 
+If you don't highlight the text, the paragraph will be run.
 
-To close the REPL, enter `\q`. Note that to close it, you must
-be in the editor window.
+To quit the REPL and close its buffer, enter `\q`. 
+Note that this requires being in the editor buffer.
 
 ## Requirements
 - Vim v8.1+

@@ -24,10 +24,10 @@ command! -nargs=1 StartREPL call StartREPL(<args>)
 
 tnoremap <silent> <c-t> <c-w>::call StartEditor()<cr>
 
-nnoremap <silent> <localleader>r :call SendKeys("char")<cr>
-vnoremap <silent> <localleader>r :<c-u>call SendKeys(visualmode())<cr>
+nnoremap <silent> <localleader>r :call RunCode("char")<cr>
+vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
 
-nnoremap <silent> <localleader>q :call CloseREPL()<cr>
+nnoremap <silent> <localleader>q :call QuitREPL()<cr>
 
 " }}}
 
@@ -75,7 +75,7 @@ function! s:ExistsREPL()
   return exists('t:termbufnr') && bufwinnr(t:termbufnr) != -1
 endfunction
 
-function! SendKeys(type)
+function! RunCode(type)
   " Send a command to the terminal
   " If the select is visual, send that.
   " Otherwise, yank the paragraph and send that
@@ -97,7 +97,7 @@ function! SendKeys(type)
   let @@ = saved_reg
 endfunction
 
-function! CloseREPL()
+function! QuitREPL()
   if !s:ExistsREPL()
     return
   endif
