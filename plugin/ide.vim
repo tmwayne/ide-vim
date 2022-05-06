@@ -66,7 +66,7 @@ function! StartREPL(cmd)
   execute command
   let t:termbufnr=winbufnr(0)
   " Remove the REPL buffer from the buffer list. This prevents
-  " accidently opened a duplicate of the REPL buffer in the
+  " accidentally opening a duplicate of the REPL buffer in the
   " editor window.
   set nobuflisted
 
