@@ -71,14 +71,14 @@ function! StartEditor()
 endfunction!
 
 function! s:ExistsREPL()
-  " Check if the terminal buffer exists and if the a buffer number is set
+  " Check if the terminal buffer exists and if the buffer number is set
   return exists('t:termbufnr') && bufwinnr(t:termbufnr) != -1
 endfunction
 
 function! RunCode(type)
-  " Send a command to the terminal
-  " If the select is visual, send that.
-  " Otherwise, yank the paragraph and send that
+  " Send a command to the terminal.
+  " If the selection is visual, send that.
+  " Otherwise, yank the paragraph and send that.
   " Use the "@ register and restore it afterwards
   if !s:ExistsREPL()
     return
@@ -98,11 +98,9 @@ function! RunCode(type)
 endfunction
 
 function! QuitREPL()
-  if !s:ExistsREPL()
-    return
+  if s:ExistsREPL()
+    execute "bd! " . t:termbufnr
   endif
-
-  execute "bd! " . t:termbufnr
 endfunction!
 
 " function! FindREPL(repl)
