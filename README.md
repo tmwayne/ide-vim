@@ -6,7 +6,7 @@ wrapper around the asynchronous terminal feature released in Vim v8.1.
 
 The plugin handles opening a REPL, managing the buffers,
 running code in the REPL, and closing the REPL. It's meant to be as
-thin as possible while providing essential functionality, as opposed to
+thin as possible with only the essential functionality, as opposed to
 being feature rich.
 
 ## Installation
@@ -24,8 +24,8 @@ cp ide-vim/plugin/ide.vim ~/.vim/plugin
 ```
 
 ## Usage
-To start a REPL, enter `:StartREPL "<repl>"`. Note that `<repl>`
-can be any valid bash command that opens a REPL. 
+To start a REPL, enter `:StartREPL "<repl>"`. Replace `<repl>`
+with any valid bash command that opens a REPL. 
 
 Use visual mode to highlight code you want to run and press `\r`.
 If no code is highlighted, then the paragraph will be run.
