@@ -20,7 +20,7 @@
 
 " MAPPINGS {{{
 
-command! -nargs=1 StartREPL call StartREPL(<args>)
+command! -nargs=1 StartInterp call StartInterp(<args>)
 
 nnoremap <silent> <localleader>r :call RunCode("char")<cr>
 vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
@@ -28,16 +28,16 @@ vnoremap <silent> <localleader>r :<c-u>call RunCode(visualmode())<cr>
 " Restore the editor window when it's been accidentally closed
 tnoremap <silent> <c-t> <c-w>: :call RestoreEditor()<cr>
 
-" Press \q in the editor window to close the REPL
-nnoremap <silent> <localleader>q :call QuitREPL()<cr>
+" Press \q in the editor window to close the interpreter
+nnoremap <silent> <localleader>q :call QuitInterp()<cr>
 
-" Press <Ctrl-q> in the REPL window to close the REPL
-tnoremap <silent> <c-q> <c-w>: :call QuitREPL()<cr>
+" Press <Ctrl-q> in the interpreter window to close the interpreter
+tnoremap <silent> <c-q> <c-w>: :call QuitInterp()<cr>
 
-" Close REPL window when quitting from the editor window.
-augroup close_repl_on_exit
+" Close interpreter window when quitting from the editor window.
+augroup close_interp_on_exit
   autocmd!
-  autocmd QuitPre * :call QuitREPL()
+  autocmd QuitPre * :call QuitInterp()
 augroup END
 
 " }}}
@@ -46,14 +46,14 @@ augroup END
 
 function! SplitVertical()
   " Check the terminal dimensions.
-  " When Vim is in full screen, the REPL window will be opened
+  " When Vim is in full screen, the interpreter window will be opened
   " to the left or right, whichever is default.
   " On the otherhand, when Vim is in half screen, 
-  " the REPL window will be either above or below.
+  " the interpreter window will be either above or below.
   return (2.5 * &lines) < &columns
 endfunction!
 
-function! StartREPL(cmd)
+function! StartInterp(cmd)
   " Start a terminal by running the provided command.
   " Set the buffer number of the terminal as a global variable
   " to reference when using term_sendkeys()
@@ -64,9 +64,9 @@ function! StartREPL(cmd)
   endif
 
   execute command
-  let t:replbufnr=winbufnr(0)
-  " Remove the REPL buffer from the buffer list. This prevents
-  " accidentally opening a duplicate of the REPL buffer in the
+  let t:interpbufnr=winbufnr(0)
+  " Remove the interpreter buffer from the buffer list. This prevents
+  " accidentally opening a duplicate of the interpreter buffer in the
   " editor window.
   set nobuflisted
 
@@ -74,19 +74,19 @@ function! StartREPL(cmd)
   execute "normal! "
 
   " Set filetype for tab in case we accidently close the editor
-  let t:replcmd=a:cmd
+  let t:interpcmd=a:cmd
   let t:filetype=&ft
 
   " Run callback
-  if exists("*StartREPLCallback")
-    call StartREPLCallback()
+  if exists("*StartInterpCallback")
+    call StartInterpCallback()
   endif
 endfunction!
 
 function! RestoreEditor()
   " Restores the editor window when it's been accidentally closed.
   " The calls to split<side> around new ensure that the editor
-  " window is opened on the opposite side that the REPL window was
+  " window is opened on the opposite side that the interpreter window was
   " opened on. This restores the position of the two window.
   if SplitVertical()
     set splitright!
@@ -100,9 +100,9 @@ function! RestoreEditor()
   let &ft=t:filetype
 endfunction!
 
-function! s:ExistsREPL()
+function! s:ExistsInterp()
   " Check if the terminal buffer exists and if the buffer number is set
-  return exists('t:replbufnr') && bufwinnr(t:replbufnr) != -1
+  return exists('t:interpbufnr') && bufwinnr(t:interpbufnr) != -1
 endfunction
 
 function! RunCode(type)
@@ -110,7 +110,7 @@ function! RunCode(type)
   " If the selection is visual, send that.
   " Otherwise, yank the paragraph and send that.
   " Use the "@ register and restore it afterwards
-  if !s:ExistsREPL()
+  if !s:ExistsInterp()
     return
   endif
 
@@ -126,7 +126,7 @@ function! RunCode(type)
     call SendKeysPreHook()
   endif
 
-  call term_sendkeys(t:replbufnr, @@)
+  call term_sendkeys(t:interpbufnr, @@)
 
   if exists("*SendKeysPostHook")
     call SendKeysPostHook()
@@ -135,11 +135,11 @@ function! RunCode(type)
   let @@ = saved_reg
 endfunction!
 
-function! QuitREPL()
-  if s:ExistsREPL()
-    execute "bd! " . t:replbufnr
+function! QuitInterp()
+  if s:ExistsInterp()
+    execute "bd! " . t:interpbufnr
   endif
-  unlet! t:filetype t:replbufnr t:replcmd
+  unlet! t:filetype t:interpbufnr t:interpcmd
 endfunction!
 
 " }}}
