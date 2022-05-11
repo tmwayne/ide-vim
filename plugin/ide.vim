@@ -64,7 +64,7 @@ function! StartREPL(cmd)
   endif
 
   execute command
-  let t:termbufnr=winbufnr(0)
+  let t:replbufnr=winbufnr(0)
   " Remove the REPL buffer from the buffer list. This prevents
   " accidentally opening a duplicate of the REPL buffer in the
   " editor window.
@@ -74,7 +74,13 @@ function! StartREPL(cmd)
   execute "normal! "
 
   " Set filetype for tab in case we accidently close the editor
+  let t:replcmd=a:cmd
   let t:filetype=&ft
+
+  " Run callback
+  if exists("*StartREPLCallback")
+    call StartREPLCallback()
+  endif
 endfunction!
 
 function! RestoreEditor()
@@ -96,7 +102,7 @@ endfunction!
 
 function! s:ExistsREPL()
   " Check if the terminal buffer exists and if the buffer number is set
-  return exists('t:termbufnr') && bufwinnr(t:termbufnr) != -1
+  return exists('t:replbufnr') && bufwinnr(t:replbufnr) != -1
 endfunction
 
 function! RunCode(type)
@@ -116,15 +122,24 @@ function! RunCode(type)
     normal yip
   endif
 
-  call term_sendkeys(t:termbufnr, @@)
+  if exists("*SendKeysPreHook")
+    call SendKeysPreHook()
+  endif
+
+  call term_sendkeys(t:replbufnr, @@)
+
+  if exists("*SendKeysPostHook")
+    call SendKeysPostHook()
+  endif
 
   let @@ = saved_reg
-endfunction
+endfunction!
 
 function! QuitREPL()
   if s:ExistsREPL()
-    execute "bd! " . t:termbufnr
+    execute "bd! " . t:replbufnr
   endif
+  unlet! t:filetype t:replbufnr t:replcmd
 endfunction!
 
 " }}}
