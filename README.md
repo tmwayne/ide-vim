@@ -42,8 +42,5 @@ the editor window.
 - Vim v8.1+
 
 ## Issues
-- Some REPLs, such as IPython require autoindentation to be turned off for
-`ide-vim` to work correctly. 
-- Also, with IPython, sending functions that
-contain new lines doesn't currently work. The current workaround is to replace
-the newlines with a comment character.
+- Some interactive REPLs require autoindentation to be turned off
+for `ide-vim` to work correctly.
