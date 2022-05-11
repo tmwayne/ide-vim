@@ -31,13 +31,12 @@ function! StartREPLCallback()
         " Instead of having SendKeysPostHook also checking the text
         " we save the result of this to a script-level variable
         let s:add_cpaste=1
-        call term_sendkeys(t:replbufnr, "%cpaste -q\<cr>\<c-@>")
+        call term_sendkeys(t:replbufnr, "%cpaste -q\<cr>")
 
         " There seems to be a race condition happening, which
         " prevents %cpaste from working correctly. A 10ms wait
         " fixes that.
         call term_wait(t:replbufnr)
-        " echom "starting"
       else
         let s:add_cpaste=0
       endif
@@ -45,8 +44,7 @@ function! StartREPLCallback()
 
     function! SendKeysPostHook()
       if s:add_cpaste
-        call term_sendkeys(t:replbufnr, "--\<cr>\<c-@>")
-        " echom "ending"
+        call term_sendkeys(t:replbufnr, "--\<cr>")
       endif
     endfunction!
 
