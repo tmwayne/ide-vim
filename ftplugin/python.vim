@@ -18,7 +18,7 @@
 " limitations under the License.
 "
 
-function! StartInterpCallback()
+function! RegisterHooks()
 
   " If the interpreter is ipython then we need to wrap
   " multi-line code blocks with a special magic function so that
@@ -26,7 +26,7 @@ function! StartInterpCallback()
   " it's a multi-line statement with at least one line indented.
   if stridx(t:interpcmd, "ipython") >= 0
 
-    function! SendKeysPreHook()
+    function! PythonSendKeysPreHook()
       if stridx(@@, "\n\t") >= 0 || stridx(@@, "\n    ") >= 0
         " Instead of having SendKeysPostHook also checking the text
         " we save the result of this to a script-level variable
@@ -42,11 +42,15 @@ function! StartInterpCallback()
       endif
     endfunction!
 
-    function! SendKeysPostHook()
+    function! PythonSendKeysPostHook()
       if s:add_cpaste
         call term_sendkeys(t:interpbufnr, "--\<cr>")
       endif
     endfunction!
+
+    " Register hooks as tab-scoped variables
+    let t:SendKeysPreHook = function("PythonSendKeysPreHook")
+    let t:SendKeysPostHook = function("PythonSendKeysPostHook")
 
   endif
 endfunction!

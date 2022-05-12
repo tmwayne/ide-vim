@@ -77,9 +77,11 @@ function! StartInterp(cmd)
   let t:interpcmd=a:cmd
   let t:filetype=&ft
 
-  " Run callback
-  if exists("*StartInterpCallback")
-    call StartInterpCallback()
+  " Load any filetype specific hooks. These hooks are registered
+  " as tab-scoped variables, allowing multiple tabs with interpreters
+  " to be opened without the hooks interferring with each other
+  if exists("*RegisterHooks")
+    call RegisterHooks()
   endif
 endfunction!
 
@@ -122,14 +124,14 @@ function! RunCode(type)
     normal yip
   endif
 
-  if exists("*SendKeysPreHook")
-    call SendKeysPreHook()
+  if exists("t:SendKeysPreHook")
+    call t:SendKeysPreHook()
   endif
 
   call term_sendkeys(t:interpbufnr, @@)
 
-  if exists("*SendKeysPostHook")
-    call SendKeysPostHook()
+  if exists("t:SendKeysPostHook")
+    call t:SendKeysPostHook()
   endif
 
   let @@ = saved_reg
