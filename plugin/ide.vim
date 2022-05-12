@@ -140,7 +140,7 @@ function! RunCode(type)
   let @@ = saved_reg
 endfunction!
 
-function s:Cleanup()
+function! s:CleanupTab()
   " Delete tab-scoped variables
 
   unlet! t:filetype t:interpbufnr t:interpcmd
@@ -151,13 +151,13 @@ function s:Cleanup()
   if exists("t:SendKeysPostHook")
     unlet! t:SendKeysPostHook
   endif
-endfunction
+endfunction!
 
 function! QuitInterp()
   if s:ExistsInterp()
     execute "bd! " . t:interpbufnr
   endif
-  call s:Cleanup()
+  call s:CleanupTab()
 endfunction!
 
 " }}}
