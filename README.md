@@ -4,7 +4,7 @@
 `ide-vim` turns Vim into a simple IDE . The plugin is a thin
 wrapper around the asynchronous terminal feature released in Vim v8.1.
 
-The plugin handles opening a interpreter, managing the buffers and windows,
+The plugin handles opening an interpreter, managing the buffers and windows,
 running code in the interpreter, and closing the interpreter. It's meant to be as
 thin as possible with only the essential functionality, as opposed to
 being feature rich.
@@ -24,10 +24,10 @@ cp ide-vim/plugin/ide.vim ~/.vim/plugin
 ```
 
 ## Usage
-To start a interpreter, enter `:StartInterp "<interp>"`. 
-Replace `<interp>` with any valid shell command that opens a interpreter.
+To start an interpreter, enter `:StartInterp "<interp>"`. 
+Replace `<interp>` with any valid shell command that opens an interpreter.
 
-Use visual mode to highlight code you want to run and press `\r`.
+Use visual mode to highlight the code you want to run and press `\r`.
 If no code is highlighted, then the paragraph will be run.
 
 To quit and close the interpreter window, press `\q` if the cursor
