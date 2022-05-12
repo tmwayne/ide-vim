@@ -26,7 +26,7 @@ function! RegisterHooks()
   " it's a multi-line statement with at least one line indented.
   if stridx(t:interpcmd, "ipython") >= 0
 
-    function! PythonSendKeysPreHook()
+    function! SendKeysPreHook_Python()
       if stridx(@@, "\n\t") >= 0 || stridx(@@, "\n    ") >= 0
         " Instead of having SendKeysPostHook also checking the text
         " we save the result of this to a script-level variable
@@ -42,15 +42,15 @@ function! RegisterHooks()
       endif
     endfunction!
 
-    function! PythonSendKeysPostHook()
+    function! SendKeysPostHook_Python()
       if s:add_cpaste
         call term_sendkeys(t:interpbufnr, "--\<cr>")
       endif
     endfunction!
 
     " Register hooks as tab-scoped variables
-    let t:SendKeysPreHook = function("PythonSendKeysPreHook")
-    let t:SendKeysPostHook = function("PythonSendKeysPostHook")
+    let t:SendKeysPreHook = function("SendKeysPreHook_Python")
+    let t:SendKeysPostHook = function("SendKeysPostHook_Python")
 
   endif
 endfunction!

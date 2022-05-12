@@ -57,6 +57,7 @@ function! StartInterp(cmd)
   " Start a terminal by running the provided command.
   " Set the buffer number of the terminal as a global variable
   " to reference when using term_sendkeys()
+
   let command = "term " . a:cmd
 
   if SplitVertical()
@@ -90,6 +91,7 @@ function! RestoreEditor()
   " The calls to split<side> around new ensure that the editor
   " window is opened on the opposite side that the interpreter window was
   " opened on. This restores the position of the two window.
+
   if SplitVertical()
     set splitright!
     vnew
@@ -112,6 +114,7 @@ function! RunCode(type)
   " If the selection is visual, send that.
   " Otherwise, yank the paragraph and send that.
   " Use the "@ register and restore it afterwards
+
   if !s:ExistsInterp()
     return
   endif
@@ -137,11 +140,24 @@ function! RunCode(type)
   let @@ = saved_reg
 endfunction!
 
+function s:Cleanup()
+  " Delete tab-scoped variables
+
+  unlet! t:filetype t:interpbufnr t:interpcmd
+  if exists("t:SendKeysPreHook")
+    unlet! t:SendKeysPreHook
+  endif
+  
+  if exists("t:SendKeysPostHook")
+    unlet! t:SendKeysPostHook
+  endif
+endfunction
+
 function! QuitInterp()
   if s:ExistsInterp()
     execute "bd! " . t:interpbufnr
   endif
-  unlet! t:filetype t:interpbufnr t:interpcmd
+  call s:Cleanup()
 endfunction!
 
 " }}}
