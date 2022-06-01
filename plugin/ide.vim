@@ -131,6 +131,10 @@ function! RunCode(type)
     call t:SendKeysPreHook()
   endif
 
+  " Exit any pager that may be open before sending keys (e.g., help screen).
+  " Otherwise the code won't execute properly, if at all.
+  call term_sendkeys(t:interpbufnr, "q\<c-H>")
+
   call term_sendkeys(t:interpbufnr, @@)
 
   if exists("t:SendKeysPostHook")
